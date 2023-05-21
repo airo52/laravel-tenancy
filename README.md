@@ -11,18 +11,90 @@ This is a simple setup for any one who might be interested to build a SAAS APPLI
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## About Laravel Tenancy
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This Laravel tenancy app gives anyone interested in developing A SOFTWARE AS A SERVICE  a quick start
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This setup has the following implemented by default:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Database::Postgresql
+- The software is subdomain based i.e tenants are accessed using their subdomains
+- Urls are simplified into public urls and shared urls
+
+## PUBLIC URLS
+  To register public urls:
+laravel tenancy
+├── app
+│   ├── Http
+│   │   ├── Controllers
+│   │   ├── Models
+│   │   └── ...
+│   ├── Console
+│   ├── Providers
+├── routes
+      ├── tenancy
+           ├── public.php
+                Route::domain('localhost')->group(function () {
+                   Route::get('/', function () {
+                  return 'register your public urls/views here';
+                    });
+                 });
+
+## TENANT URLS i.e subdomain endpoints
+   To register tenant urls:
+   - use the default api.php file :
+├── app
+│   ├── Http
+│   │   ├── Controllers
+│   │   ├── Models
+│   │   └── ...
+│   ├── Console
+│   ├── Providers
+├── routes
+     ├──api.php
+
+## Register tenants 
+     you can create tenants using the following code modify to suite your needs
+
+   $tenant1 = App\Models\Tenant::create(['id' => 'foo']);
+   $tenant1->domains()->create(['domain' => 'foo.localhost']);
+     >>>
+   $tenant2 = App\Models\Tenant::create(['id' => 'bar']);
+   $tenant2->domains()->create(['domain' => 'bar.localhost']);     
+## create tenant users
+   App\Models\Tenant::all()->runForEach(function () {
+    App\Models\User::factory()->create();
+   });
+
+## migrations 
+    For tenants::
+├── app
+│   ├── Http
+│   │   ├── Controllers
+│   │   ├── Models
+│   │   └── ...
+│   ├── Console
+│   ├── Providers
+│   └── ...
+├── config
+├── database
+│   ├── migrations
+        ├── tenants
+            ---- all the migration in this schema will go to tenant schemas
 
 
+      FOR public schema::
+├── app
+│   ├── Http
+│   │   ├── Controllers
+│   │   ├── Models
+│   │   └── ...
+│   ├── Console
+│   ├── Providers
+│   └── ...
+├── config
+├── database
+│   ├── migrations
+        ---migration on the route directory---                  
+     
+   
